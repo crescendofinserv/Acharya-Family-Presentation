@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Insurance Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a5490 0%, #0d2d4d 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a5490 0%, #0d2d4d 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+        
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-top: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .tab-btn {
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tab-btn.active {
+            color: white;
+            border-bottom: 3px solid white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        thead {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+        }
+        
+        th:first-child {
+            width: 25%;
+            background: #e9ecef;
+        }
+        
+        th:not(:first-child) {
+            text-align: center;
+            background: linear-gradient(135deg, #1a5490 0%, #0d2d4d 100%);
+            color: white;
+        }
+        
+        .plan-header {
+            font-size: 1.1em;
+            padding: 20px 12px !important;
+        }
+        
+        .plan-name {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+        
+        .sum-insured {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .premium {
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        td {
+            padding: 14px 12px;
+            vertical-align: top;
+        }
+        
+        td:first-child {
+            font-weight: 600;
+            background: #f8f9fa;
+            color: #495057;
+        }
+        
+        td:not(:first-child) {
+            text-align: center;
+        }
+        
+        .category-row td {
+            background: #e9ecef !important;
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #495057;
+            padding: 16px 12px;
+        }
+        
+        .checkmark {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .cross {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background: #d4edda;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #155724;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #856404;
+        }
+        
+        .footer {
+            padding: 40px 30px 30px;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .contact-header {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1a5490;
+            margin-bottom: 8px;
+        }
+        
+        .contact-header a {
+            color: #1a5490;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .contact-header a:hover {
+            text-decoration: underline;
+        }
+        
+        .services-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .service-column h3 {
+            color: #1a5490;
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .service-list {
+            color: #495057;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .service-emails {
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+        
+        .service-emails a {
+            color: #1a5490;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .service-emails a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .disclaimer-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #1a5490 0%, #0d2d4d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85em;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(26, 84, 144, 0.3);
+        }
+        
+        .disclaimer-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 84, 144, 0.4);
+        }
+        
+        .invest-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+        
+        .invest-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            background: #218838;
+        }
+        
+        .note-text {
+            color: #dc3545;
+            font-weight: 700;
+            font-style: italic;
+            text-align: center;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        
+        /* Life Insurance specific column width */
+        #life-tab th:first-child,
+        #life-tab td:first-child {
+            width: auto;
+            min-width: 80px;
+            max-width: 100px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-content {
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .services-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+            
+            #life-tab th:first-child,
+            #life-tab td:first-child {
+                min-width: 60px;
+                max-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://github.com/crescendofinserv/Crescendo-Finserv-Disclaimer-Page1/blob/73afec37c42ea47fd2b066ea1498c9270e4a5cf5/crescendo-logo.png?raw=true" alt="Crescendo Finserv Logo" class="logo">
+            <div class="header-content">
+                <h1>Health Insurance Plan Comparison</h1>
+                <p>Compare features, benefits, and pricing across top insurance providers</p>
+                <div class="tabs-container">
+                    <button class="tab-btn active" onclick="switchTab('health')">Health Insurance</button>
+                    <button class="tab-btn" onclick="switchTab('life')">Life Insurance</button>
+                    <button class="tab-btn" onclick="switchTab('mutual')">Mutual Fund Restructure</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="health-tab" class="tab-content active">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th class="plan-header">
+                            <div class="plan-name">HDFC ERGO</div>
+                            <div>Optima Secure</div>
+                        </th>
+                        <th class="plan-header">
+                            <div class="plan-name">Care Health</div>
+                            <div>Care Supreme</div>
+                        </th>
+                        <th class="plan-header">
+                            <div class="plan-name">Tata AIG</div>
+                            <div>Medicare Select</div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Plan Details</th>
+                        <th>
+                            <div class="sum-insured">₹5 Lakhs</div>
+                            <div class="premium">₹43,235/year</div>
+                        </th>
+                        <th>
+                            <div class="sum-insured">₹7 Lakhs</div>
+                            <div class="premium">₹37,319/year</div>
+                        </th>
+                        <th>
+                            <div class="sum-insured">₹10 Lakhs</div>
+                            <div class="premium">₹45,671/year</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-row">
+                        <td colspan="4">CORE HOSPITALIZATION BENEFITS</td>
+                    </tr>
+                    <tr>
+                        <td>In-Patient Hospitalization</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                    </tr>
+                    <tr>
+                        <td>Pre-Post Hospitalization</td>
+                        <td><span class="highlight">60 Days / 180 Days</span></td>
+                        <td><span class="highlight">60 Days / 180 Days</span></td>
+                        <td>90 Days / 90 Days</td>
+                    </tr>
+                    <tr>
+                        <td>Room Rent & ICU Charges</td>
+                        <td><span class="highlight">No Capping</span></td>
+                        <td><span class="highlight">No Capping</span></td>
+                        <td>Single Private Room</td>
+                    </tr>
+                    <tr>
+                        <td>Day Care Treatment</td>
+                        <td>All Covered</td>
+                        <td>All Covered</td>
+                        <td>All Covered</td>
+                    </tr>
+                    <tr>
+                        <td>Restoration of Sum Insured</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Pre-Existing Waiting Period</td>
+                        <td>3 Years</td>
+                        <td>3 Years</td>
+                        <td>3 Years</td>
+                    </tr>
+                    <tr>
+                        <td>Domiciliary Treatment</td>
+                        <td><span class="highlight">Up to Base Sum Insured</span></td>
+                        <td>10% of Sum Insured</td>
+                        <td><span class="highlight">Up to Base Sum Insured</span></td>
+                    </tr>
+                    
+                    <tr class="category-row">
+                        <td colspan="4">ADVANCED TREATMENT & COVERAGE</td>
+                    </tr>
+                    <tr>
+                        <td>2X Coverage</td>
+                        <td><span class="highlight">From 1st Claim</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Modern & Advanced Treatment</td>
+                        <td><span class="highlight">Covered</span></td>
+                        <td><span class="highlight">Covered</span></td>
+                        <td>Up to Base Sum Insured</td>
+                    </tr>
+                    <tr>
+                        <td>Non-Medical Expenses</td>
+                        <td><span class="highlight">Inbuilt</span></td>
+                        <td><span class="warning">Add-on Rider</span></td>
+                        <td>Covered (Consumable Rider)</td>
+                    </tr>
+                    <tr>
+                        <td>No Claim Bonus</td>
+                        <td>50% - 100%</td>
+                        <td><span class="highlight">150% - 600%</span></td>
+                        <td>100% - 500% (Super Charger)</td>
+                    </tr>
+                    
+                    <tr class="category-row">
+                        <td colspan="4">ADDITIONAL BENEFITS</td>
+                    </tr>
+                    <tr>
+                        <td>AYUSH Treatment</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                    </tr>
+                    <tr>
+                        <td>Ambulance Cover</td>
+                        <td>Up to ₹5,000</td>
+                        <td><span class="highlight">Up to Full Sum Insured</span></td>
+                        <td><span class="highlight">Up to Full Sum Insured</span></td>
+                    </tr>
+                    <tr>
+                        <td>Organ Donor Expenses</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                        <td>Up to Full Sum Insured</td>
+                    </tr>
+                    <tr>
+                        <td>Health Checkup Benefit</td>
+                        <td>₹2,500 (18+ yrs)</td>
+                        <td>Covered (18+ yrs)</td>
+                        <td>1% of SI, Max ₹10,000</td>
+                    </tr>
+                    
+                    <tr class="category-row">
+                        <td colspan="4">SPECIAL FEATURES</td>
+                    </tr>
+                    <tr>
+                        <td>PED Reduction Option</td>
+                        <td><span class="cross">Not Available</span></td>
+                        <td><span class="warning">Available (Add'l Premium)</span></td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Maternity Benefit</td>
+                        <td><span class="cross">Not Available</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="highlight">10% SI, Max ₹1 Lakh</span></td>
+                    </tr>
+                    <tr>
+                        <td>OPD Benefit</td>
+                        <td><span class="cross">Not Available</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="highlight">Available</span></td>
+                    </tr>
+                    <tr>
+                        <td>Wellness Benefits</td>
+                        <td><span class="checkmark">✓ Available</span></td>
+                        <td><span class="checkmark">✓ Available</span></td>
+                        <td><span class="checkmark">✓ Available</span></td>
+                    </tr>
+                    <tr>
+                        <td>Global Cover</td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="cross">Not Available</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dental Cover</td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                    </tr>
+                    <tr>
+                        <td>High-End Diagnostic</td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                        <td><span class="cross">Not Covered</span></td>
+                    </tr>
+                    
+                    <tr class="category-row">
+                        <td colspan="4">WAITING PERIODS</td>
+                    </tr>
+                    <tr>
+                        <td>Specific Waiting Period</td>
+                        <td>2 Years</td>
+                        <td>2 Years</td>
+                        <td>2 Years</td>
+                    </tr>
+                    <tr>
+                        <td>Initial Waiting Period</td>
+                        <td>30 Days</td>
+                        <td>30 Days</td>
+                        <td>30 Days</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+        
+        <div id="life-tab" class="tab-content">
+        <div class="table-wrapper">
+            <h2 style="text-align: center; color: #1a5490; margin-bottom: 20px; font-size: 1.5em;">ICICI LI - SIG</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Option</th>
+                        <th rowspan="2">Investment</th>
+                        <th rowspan="2">Life Insurance Cover</th>
+                        <th rowspan="2">Pay for (Years)</th>
+                        <th rowspan="2">Policy Term (Years)</th>
+                        <th rowspan="2">Total Investment</th>
+                        <th colspan="3">13% assumption</th>
+                        <th colspan="3">16% assumption</th>
+                    </tr>
+                    <tr>
+                        <th>Corpus in 10th year</th>
+                        <th>Corpus in 20th year</th>
+                        <th>Corpus in 25th year</th>
+                        <th>Corpus in 10th year</th>
+                        <th>Corpus in 20th year</th>
+                        <th>Corpus in 25th year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>10,000 per month</td>
+                        <td>12,00,000</td>
+                        <td>7</td>
+                        <td>46</td>
+                        <td>8,40,000</td>
+                        <td>16,28,967</td>
+                        <td>51,24,026</td>
+                        <td>90,54,500</td>
+                        <td>19,89,027</td>
+                        <td>81,15,139</td>
+                        <td>1,63,47,508</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>15,000 per month</td>
+                        <td>18,00,000</td>
+                        <td>7</td>
+                        <td>46</td>
+                        <td>12,60,000</td>
+                        <td>24,43,451</td>
+                        <td>76,89,039</td>
+                        <td>1,35,81,751</td>
+                        <td>29,83,540</td>
+                        <td>1,21,72,708</td>
+                        <td>2,45,21,262</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>20,850 per month</td>
+                        <td>25,00,000</td>
+                        <td>7</td>
+                        <td>46</td>
+                        <td>17,50,000</td>
+                        <td>35,75,056</td>
+                        <td>1,12,45,580</td>
+                        <td>1,98,71,700</td>
+                        <td>43,65,271</td>
+                        <td>1,78,10,105</td>
+                        <td>3,58,77,494</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="note-text">Above mentioned corpus is Tax Free</div>
+            
+            <h2 style="text-align: center; color: #1a5490; margin: 40px 0 20px; font-size: 1.5em;">ICICI LI - PNG</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Investment</th>
+                        <th>Life Insurance Cover</th>
+                        <th>Pay for (Years)</th>
+                        <th>Policy Term (Years)</th>
+                        <th>Total Investment</th>
+                        <th>Corpus in 40th year (13% assumption)</th>
+                        <th>Corpus in 40th year (16% assumption)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>13,000 per month</td>
+                        <td>1,50,00,000</td>
+                        <td>7</td>
+                        <td>40</td>
+                        <td>10,86,316</td>
+                        <td>3,96,71,940</td>
+                        <td>10,42,58,229</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>16,600 per month</td>
+                        <td>2,00,00,000</td>
+                        <td>7</td>
+                        <td>40</td>
+                        <td>13,94,939</td>
+                        <td>5,35,27,663</td>
+                        <td>14,01,97,377</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>20,758 per month</td>
+                        <td>2,50,00,000</td>
+                        <td>7</td>
+                        <td>40</td>
+                        <td>17,43,672</td>
+                        <td>6,77,39,581</td>
+                        <td>17,70,08,850</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="note-text">Above mentioned corpus is Tax Free</div>
+        </div>
+        </div>
+        
+        <div id="mutual-tab" class="tab-content">
+        <div class="table-wrapper">
+            <h2 style="text-align: center; color: #1a5490; margin-bottom: 20px; font-size: 1.5em;">Mutual Fund Restructure Analysis</h2>
+            
+            <h3 style="color: #1a5490; margin: 30px 0 15px; font-size: 1.3em;">Long Term Capital Gains</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SCHEME</th>
+                        <th>FOLIO NO</th>
+                        <th>PURCHASE AMOUNT</th>
+                        <th>ADJUSTED PURCHASE</th>
+                        <th>BALANCE UNITS</th>
+                        <th>CURRENT VALUE</th>
+                        <th>ACTUAL CAPITAL</th>
+                        <th>TAXABLE CAPITAL</th>
+                        <th>CAGR %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bank of India Smallcap Fund Reg (G)</td>
+                        <td>9109737175</td>
+                        <td>₹99,500</td>
+                        <td>₹99,500</td>
+                        <td>1988.78</td>
+                        <td>₹86,850</td>
+                        <td><span class="cross">-₹12,650</span></td>
+                        <td><span class="cross">-₹12,650</span></td>
+                        <td><span class="cross">-10.1%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Canara Robeco Small Cap Fund Reg (G)</td>
+                        <td>17721822352</td>
+                        <td>₹30,000</td>
+                        <td>₹30,000</td>
+                        <td>788.102</td>
+                        <td>₹29,664</td>
+                        <td><span class="cross">-₹336</span></td>
+                        <td><span class="cross">-₹336</span></td>
+                        <td><span class="cross">-0.89%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invesco India Multicap Fund (G)</td>
+                        <td>31024816914</td>
+                        <td>₹99,500</td>
+                        <td>₹99,500</td>
+                        <td>721.028</td>
+                        <td>₹90,006</td>
+                        <td><span class="cross">-₹9,494</span></td>
+                        <td><span class="cross">-₹9,494</span></td>
+                        <td><span class="cross">-7.59%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mahindra Manulife Mid Cap Fund Reg (G)</td>
+                        <td>1001418372</td>
+                        <td>₹99,500</td>
+                        <td>₹99,500</td>
+                        <td>2856.04</td>
+                        <td>₹96,158</td>
+                        <td><span class="cross">-₹3,342</span></td>
+                        <td><span class="cross">-₹3,342</span></td>
+                        <td><span class="cross">-2.66%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nippon India Consumption Fund (G)</td>
+                        <td>477362746127</td>
+                        <td>₹99,500</td>
+                        <td>₹99,500</td>
+                        <td>461.105</td>
+                        <td>₹89,304</td>
+                        <td><span class="cross">-₹10,196</span></td>
+                        <td><span class="cross">-₹10,196</span></td>
+                        <td><span class="cross">-8.17%</span></td>
+                    </tr>
+                    <tr>
+                        <td>SBI Consumption Opportunities Fund (G)</td>
+                        <td>24408838</td>
+                        <td>₹42,000</td>
+                        <td>₹42,000</td>
+                        <td>128.862</td>
+                        <td>₹38,633</td>
+                        <td><span class="cross">-₹3,367</span></td>
+                        <td><span class="cross">-₹3,367</span></td>
+                        <td><span class="cross">-7.29%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Baroda BNP Paribas India Consumption Fund</td>
+                        <td>3041230246</td>
+                        <td>₹2,70,000</td>
+                        <td>₹2,70,000</td>
+                        <td>12850.1</td>
+                        <td>₹4,03,594</td>
+                        <td><span class="checkmark">₹1,33,594</span></td>
+                        <td><span class="checkmark">₹1,33,594</span></td>
+                        <td><span class="checkmark">12.89%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Baroda BNP Paribas India Consumption Fund</td>
+                        <td>3106616284</td>
+                        <td>₹68,124</td>
+                        <td>₹68,124</td>
+                        <td>2337.87</td>
+                        <td>73,428</td>
+                        <td><span class="checkmark">₹5,304</span></td>
+                        <td><span class="checkmark">₹5,304</span></td>
+                        <td><span class="checkmark">4.83%</span></td>
+                    </tr>
+                    <tr>
+                        <td>HSBC Small Cap Fund Reg (G)</td>
+                        <td>5958754/62</td>
+                        <td>₹74,000</td>
+                        <td>₹74,000</td>
+                        <td>1197.7</td>
+                        <td>₹91,215</td>
+                        <td><span class="checkmark">₹17,215</span></td>
+                        <td><span class="checkmark">₹17,215</span></td>
+                        <td><span class="checkmark">8.88%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invesco India Multicap Fund (G)</td>
+                        <td>31019178642</td>
+                        <td>₹64,503</td>
+                        <td>₹64,503</td>
+                        <td>547.001</td>
+                        <td>₹68,282</td>
+                        <td><span class="checkmark">₹3,779</span></td>
+                        <td><span class="checkmark">₹3,779</span></td>
+                        <td><span class="checkmark">3.6%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mahindra Manulife Mid Cap Fund Reg (G)</td>
+                        <td>1001084245</td>
+                        <td>₹69,371</td>
+                        <td>₹69,371</td>
+                        <td>2318.67</td>
+                        <td>₹78,065</td>
+                        <td><span class="checkmark">₹8,694</span></td>
+                        <td><span class="checkmark">₹8,694</span></td>
+                        <td><span class="checkmark">7.67%</span></td>
+                    </tr>
+                    <tr class="category-row">
+                        <td colspan="2"><strong>TOTAL</strong></td>
+                        <td><strong>₹10,15,999</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>₹11,45,199</strong></td>
+                        <td><strong>₹1,29,201</strong></td>
+                        <td><strong>₹1,29,201</strong></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; color: #1a5490; font-weight: 600;">
+                    <div>Current Value: <span style="color: #28a745;">₹11,45,199</span> (Longterm)</div>
+                    <div>Capital Gains: <span style="color: #28a745;">₹1,29,201</span> (Longterm)</div>
+                    <div>Tax Free Limit: <span style="color: #856404;">₹1,25,000</span> (Longterm)</div>
+                    <div>Net Taxable Gain: <span style="color: #dc3545;">₹4,201</span> (Longterm)</div>
+                    <div>LTCG Amount: <span style="color: #dc3545;">₹525</span></div>
+                </div>
+            </div>
+
+            <h3 style="color: #1a5490; margin: 40px 0 15px; font-size: 1.3em;">Short Term Capital Gains</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SCHEME</th>
+                        <th>FOLIO NO</th>
+                        <th>PURCHASE AMOUNT</th>
+                        <th>ADJUSTED PURCHASE</th>
+                        <th>BALANCE UNITS</th>
+                        <th>CURRENT VALUE</th>
+                        <th>ACTUAL CAPITAL</th>
+                        <th>TAXABLE CAPITAL</th>
+                        <th>CAGR %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bank of India Smallcap Fund Reg (G)</td>
+                        <td>9109737175</td>
+                        <td>₹8,000</td>
+                        <td>₹8,000</td>
+                        <td>174.203</td>
+                        <td>₹7,607</td>
+                        <td><span class="</thead>
+                <tbody>
+                    <tr>
+                        <td>Bank of India Smallcap Fund Reg (G)</td>
+                        <td>9109737175</td>
+                        <td>₹7,999.98</td>
+                        <td>₹7,999.98</td>
+                        <td>174.203</td>
+                        <td>₹7,607.45</td>
+                        <td><span class="cross">-₹392.54</span></td>
+                        <td><span class="cross">-₹392.54</span></td>
+                        <td><span class="cross">-14.83%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Baroda BNP Paribas India Consumption Fund Reg (G)</td>
+                        <td>3041230246</td>
+                        <td>₹1,12,999.99</td>
+                        <td>₹1,12,999.99</td>
+                        <td>3633.667</td>
+                        <td>₹1,14,126.21</td>
+                        <td><span class="checkmark">₹1,126.22</span></td>
+                        <td><span class="checkmark">₹1,126.22</span></td>
+                        <td><span class="checkmark">1.94%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Canara Robeco Consumer Trends Fund Reg.plan (G)</td>
+                        <td>17721822352</td>
+                        <td>₹24,000.45</td>
+                        <td>₹24,000.45</td>
+                        <td>223.59</td>
+                        <td>₹24,331.06</td>
+                        <td><span class="checkmark">₹330.62</span></td>
+                        <td><span class="checkmark">₹330.62</span></td>
+                        <td><span class="checkmark">2.7%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Canara Robeco Large Cap Fund (G)</td>
+                        <td>17721822433</td>
+                        <td>₹12,000.08</td>
+                        <td>₹12,000.08</td>
+                        <td>194.198</td>
+                        <td>₹12,403.43</td>
+                        <td><span class="checkmark">₹403.34</span></td>
+                        <td><span class="checkmark">₹403.34</span></td>
+                        <td><span class="checkmark">6.7%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Canara Robeco Small Cap Fund Reg (G)</td>
+                        <td>17721822352</td>
+                        <td>₹22,999.99</td>
+                        <td>₹22,999.99</td>
+                        <td>631.136</td>
+                        <td>₹23,755.96</td>
+                        <td><span class="checkmark">₹755.96</span></td>
+                        <td><span class="checkmark">₹755.96</span></td>
+                        <td><span class="checkmark">5.07%</span></td>
+                    </tr>
+                    <tr>
+                        <td>HSBC Small Cap Fund Reg (G)</td>
+                        <td>5958754/62</td>
+                        <td>₹31,000.04</td>
+                        <td>₹31,000.04</td>
+                        <td>398.786</td>
+                        <td>₹30,370.86</td>
+                        <td><span class="cross">-₹629.17</span></td>
+                        <td><span class="cross">-₹629.17</span></td>
+                        <td><span class="cross">-3.54%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invesco India Multicap Fund (G)</td>
+                        <td>3044055252</td>
+                        <td>₹72,000.08</td>
+                        <td>₹72,000.08</td>
+                        <td>568.786</td>
+                        <td>₹71,001.56</td>
+                        <td><span class="cross">-₹998.52</span></td>
+                        <td><span class="cross">-₹998.52</span></td>
+                        <td><span class="cross">-2.63%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invesco India Multicap Fund (G)</td>
+                        <td>31019178642</td>
+                        <td>₹54,000.30</td>
+                        <td>₹54,000.30</td>
+                        <td>428.754</td>
+                        <td>₹53,521.36</td>
+                        <td><span class="cross">-₹478.94</span></td>
+                        <td><span class="cross">-₹478.94</span></td>
+                        <td><span class="cross">-1.81%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Invesco India Multicap Fund (G)</td>
+                        <td>31024816914</td>
+                        <td>₹8,000.21</td>
+                        <td>₹8,000.21</td>
+                        <td>61.513</td>
+                        <td>₹7,678.67</td>
+                        <td><span class="cross">-₹321.55</span></td>
+                        <td><span class="cross">-₹321.55</span></td>
+                        <td><span class="cross">-12.02%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Nippon India Consumption Fund (G)</td>
+                        <td>477362746127</td>
+                        <td>₹7,999.69</td>
+                        <td>₹7,999.69</td>
+                        <td>39.855</td>
+                        <td>₹7,718.89</td>
+                        <td><span class="cross">-₹280.80</span></td>
+                        <td><span class="cross">-₹280.80</span></td>
+                        <td><span class="cross">-10.41%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Quant Flexi Cap Fund (G)</td>
+                        <td>51013562936</td>
+                        <td>₹19,000.09</td>
+                        <td>₹19,000.09</td>
+                        <td>200.142</td>
+                        <td>₹19,361.56</td>
+                        <td><span class="checkmark">₹361.47</span></td>
+                        <td><span class="checkmark">₹361.47</span></td>
+                        <td><span class="checkmark">3.24%</span></td>
+                    </tr>
+                    <tr>
+                        <td>SBI Consumption Opportunities Fund (G)</td>
+                        <td>24408838</td>
+                        <td>₹60,500.20</td>
+                        <td>₹60,500.20</td>
+                        <td>202.552</td>
+                        <td>₹60,724.87</td>
+                        <td><span class="checkmark">₹224.67</span></td>
+                        <td><span class="checkmark">₹224.67</span></td>
+                        <td><span class="checkmark">0.52%</span></td>
+                    </tr>
+                    <tr class="category-row">
+                        <td colspan="2"><strong>TOTAL</strong></td>
+                        <td><strong>₹4,30,500.10</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>₹4,32,601.88</strong></td>
+                        <td><strong>₹100.76</strong></td>
+                        <td><strong>₹100.76</strong></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; color: #1a5490; font-weight: 600;">
+                    <div>Total Current Value: <span style="color: #28a745;">₹4,32,601.88</span></div>
+                    <div>Total Capital Gains: <span style="color: #28a745;">₹100.76</span></div>
+                    <div>Net Taxable Gain: <span style="color: #dc3545;">₹100.76</span></div>
+                    <div>STCG Tax Amount: <span style="color: #dc3545;">₹20.15</span></div>
+                </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #1a5490 0%, #0d2d4d 100%); color: white; padding: 25px; border-radius: 12px; margin: 30px 0; text-align: center;">
+                <h3 style="font-size: 1.4em; margin-bottom: 10px;">Total Amount That Can Be Restructured Without Tax</h3>
+                <div style="font-size: 2.5em; font-weight: bold; color: #ffeb3b;">₹15,77,801</div>
+            </div>
+        </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-content">
+                <div class="contact-info">
+                    <div class="contact-header">
+                        <a href="tel:+918097032001">+91 80970 32001</a> | 
+                        <a href="https://www.crescendofinserv.in" target="_blank">www.crescendofinserv.in</a>
+                    </div>
+                </div>
+                
+                <div class="services-section">
+                    <div class="service-column">
+                        <h3>Wealth Management</h3>
+                        <div class="service-list">
+                            Mutual Funds | PMS | AIF | NCD / Bonds | Secondary Debt | FD | Structured Products
+                        </div>
+                        <div class="service-emails">
+                            <a href="mailto:support@crescendofinserv.in">support@crescendofinserv.in</a>
+                        </div>
+                    </div>
+                    
+                    <div class="service-column">
+                        <h3>Insurance</h3>
+                        <div class="service-list">
+                            Life | Health | Motor | Travel
+                        </div>
+                        <div class="service-emails">
+                            <a href="mailto:insurance@crescendofinserv.in">insurance@crescendofinserv.in</a>
+                            <a href="mailto:claims@crescendofinserv.in">claims@crescendofinserv.in</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-actions">
+                    <a href="https://crescendofinserv.github.io/Crescendo-Finserv-Disclaimer-Page1/" target="_blank" class="disclaimer-btn">Crescendo Finserv - Disclaimer</a>
+                    <a href="https://crescendofinserv.investwell.app/app/#/login" target="_blank" class="invest-btn">
+                        INVEST ONLINE →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
